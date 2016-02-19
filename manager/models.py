@@ -27,6 +27,27 @@ class SignalGenerator(Item):
     freq_stop = models.IntegerField(blank = True, null = True)
     output_power_max = models.IntegerField(blank = True, null = True)
 
+class VectorSignalGenerator(Item):
+    freq_start = models.IntegerField(blank = True, null = True)
+    freq_stop = models.IntegerField(blank = True, null = True)
+    output_power_max = models.IntegerField(blank = True, null = True)
+
+class ArbitaryWaveformGenerator(Item):
+    freq_start = models.IntegerField(blank = True, null = True)
+    freq_stop = models.IntegerField(blank = True, null = True)
+    output_power_max = models.IntegerField(blank = True, null = True)
+
+class SoftwareDefinedRadio(Item):
+    freq_start = models.IntegerField(blank = True, null = True)
+    freq_stop = models.IntegerField(blank = True, null = True)
+    output_power_max = models.IntegerField(blank = True, null = True)
+
+class Laptop(Item):
+    pass
+
+class NetworkAnalyzer(Item):
+    pass
+
 class Inventory(models.Model):
     item = models.OneToOneField(Item, on_delete=models.CASCADE)
     count = models.IntegerField()
