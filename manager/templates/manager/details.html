@@ -1,0 +1,16 @@
+{% extends "manager/main.html" %}
+{% block content %}
+<div class="row">
+<div class="col-xs-12">
+<div class="well">
+<h1>{{item.name}}</h1>
+</div>
+</div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <img src="{{ item.img_url }}" style="max-width:100%;max-height:400px" alt="No Image Available">
+        <p> Reserved by: {{ reservation.reserved_by.username }} </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "manager/main.html" %}
+{% block content %}
+<div class='row'>
+<div class='col-xs-12'>
+<div class="well">
+    <h1>What are you looking for?</h1>
+</div>
+</div>
+</div>
+<div class='row'>
+<div class='col-xs-12'>
+<div class="well">
+<form action='{% url 'search' %}'>
+    {% csrf_token %}
+    <input type="text">
+    <input type="submit">
+</form>
+</div>
+</div>
+</div>
+<div class="row">
+{% if view_mode == 'grid' %}
+{% for category in categories %}
+    <div class="col-xs-6 col-sm-3">
+        <div class="well" style="height:120px">
+            <p class="center-text" style="margin-top:10px;">
+                <a href="{% url 'category' category.id %}"> {{category.name}}s </a>
+            </p>
+        </div>
+    </div>
+{% endfor %}
+{% else %}
+{% for category in categories %}
+    <div class="col-xs-12 col-sm-12">
+        <div class="well">
+            <h3><a href="{% url 'category' category.id %}">{{category.name}}s</a></h3>
+            <ul class='list-group'>
+            {% for item in items %}
+                {% if item.category.all.0.name == category.name %}
+                    <li class='list-group-item'>
+                        <span class="badge">14</span>
+                        <a href={% url 'details' item.id %}>{{item.name}}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endfor %}
+{% endif %}
+</div>
+{% endblock %}
