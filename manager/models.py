@@ -9,46 +9,48 @@ class Category(models.Model):
         return self.name
 
 class Item(models.Model):
-    name = models.CharField(max_length=1024)
     serial = models.CharField(max_length=1024)
-    category = models.ManyToManyField(Category)
     location = models.CharField(max_length=1024, blank = True, null = True)
+    notes = models.CharField(max_length=1024, blank = True, null = True)
+    item_desc = models.ForeignKey('manager.ItemDescriptor', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.serial
+
+class ItemDescriptor(models.Model):
+    name = models.CharField(max_length=1024)
     img_url = models.CharField(max_length=1024, blank = True, null = True)
     doc_url = models.CharField(max_length=1024, blank = True, null = True)
+    category = models.ForeignKey('manager.Category', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
-class SpectrumAnalyzer(Item):
+class SpectrumAnalyzer(ItemDescriptor):
     freq_start = models.IntegerField(blank = True, null = True)
     freq_stop = models.IntegerField(blank = True, null = True)
     input_power_max = models.IntegerField(blank = True, null = True)
 
-class SignalGenerator(Item):
+class Oscilloscpe(ItemDescriptor):
+    bw = models.IntegerField(blank = True, null = True)
+    samp_rate = models.IntegerField(blank = True, null = True)
+    num_chan = models.IntegerField(blank = True, null = True)
+
+class SignalGenerator(ItemDescriptor):
     freq_start = models.IntegerField(blank = True, null = True)
     freq_stop = models.IntegerField(blank = True, null = True)
     output_power_max = models.IntegerField(blank = True, null = True)
 
-class VectorSignalGenerator(Item):
+class USRP_Daughterboards(ItemDescriptor):
     freq_start = models.IntegerField(blank = True, null = True)
     freq_stop = models.IntegerField(blank = True, null = True)
     output_power_max = models.IntegerField(blank = True, null = True)
+    input_power_max = models.IntegerField(blank = True, null = True)
+    bw_max = models.IntegerField(blank = True, null = True)
 
-class ArbitaryWaveformGenerator(Item):
+class NetworkAnalyzer(ItemDescriptor):
     freq_start = models.IntegerField(blank = True, null = True)
     freq_stop = models.IntegerField(blank = True, null = True)
-    output_power_max = models.IntegerField(blank = True, null = True)
-
-class SoftwareDefinedRadio(Item):
-    freq_start = models.IntegerField(blank = True, null = True)
-    freq_stop = models.IntegerField(blank = True, null = True)
-    output_power_max = models.IntegerField(blank = True, null = True)
-
-class Laptop(Item):
-    pass
-
-class NetworkAnalyzer(Item):
-    pass
 
 class Reservation(models.Model):
     reserved_by = models.ForeignKey(
@@ -58,6 +60,10 @@ class Reservation(models.Model):
     reserved_on = models.DateField()
     reserved_until = models.DateField()
 
-class Inventory(models.Model):
-    item = models.OneToOneField(Item, on_delete=models.CASCADE)
-    count = models.IntegerField()
+class Problem(models.Model):
+    item = models.ForeignKey('manager.Item', on_delete=models.CASCADE)
+    desc = models.TextField()
+    reported_by = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    reported_on = models.DateTimeField()    
+    handeled = models.BooleanField()
+    handeled_on = models.DateTimeField()
